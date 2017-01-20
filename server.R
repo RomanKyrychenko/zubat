@@ -10,7 +10,6 @@ shinyServer(function(input, output){
     df <-read_excel(paste(inFile$datapath, ".xlsx", sep=""), 1,col_names = FALSE)
     names(df)[1:2] <- c("X0","X1")
     zubat <- function(df){
-      ukraine_map <- getData('GADM', country='Ukraine', level=1)
       
       ukraine_map@data$NAME_1 <- c("Черкаська","Чернігівська","Чернівецька","Крим","Дніпропетровська","Донецька","Івано-Франківська","Харківська",
                                    "Херсонська","Хмельницька","Київ","Київська","Кіровоградська","Львівська","Луганська","Миколаївська","Одеська",
@@ -43,8 +42,8 @@ shinyServer(function(input, output){
         scale_fill_gradient(low="white", high="#4d738a") +
         geom_map(aes(fill = X1), map =ukraine_df, color = "grey") +
         with(centroids, annotate(geom="text", x = long, y=lat, label = label, size = 5)) +
-        with(centroids,annotate(geom="point",x = long, y=lat+0.25,color="green",fill="green",size=8))+
-        with(centroids, annotate(geom="text", x = long, y=lat+0.25, label = lab, size = 6)) +
+        with(centroids,annotate(geom="point",x = long, y=lat+0.25,color="#31a354",fill="#31a354",size=10))+
+        with(centroids, annotate(geom="text", x = long, y=lat+0.25, label = lab, size = 6, color="white")) +
         expand_limits(x = ukraine_df$long, y = ukraine_df$lat) + theme_void() + theme(
           legend.position = "none"
         )

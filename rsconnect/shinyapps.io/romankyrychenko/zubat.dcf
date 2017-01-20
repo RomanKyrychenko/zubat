@@ -1,0 +1,11 @@
+name: zubat
+title: zubat
+account: romankyrychenko
+server: shinyapps.io
+appId: 151632
+bundleId: 685718
+url: https://romankyrychenko.shinyapps.io/zubat/
+when: 1484904956.80824
+asMultiple: FALSE
+asStatic: FALSE
+ignoredFiles: .RData|GADM_2.8_UKR_adm1.rds|zubat.R|zubbo.R

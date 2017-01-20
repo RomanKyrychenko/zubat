@@ -1,4 +1,4 @@
-Sys.setlocale(,"RU_ru")
+load("zubat.RData")
 library(shiny)
 library(openxlsx)
 library(lattice)
