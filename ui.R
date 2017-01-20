@@ -1,5 +1,5 @@
 shinyUI(fluidPage(
-  titlePanel("Зубко без реєстрації та смс"),
+  titlePanel("ZUBAT без реєстрації та смс"),
   sidebarLayout(
     sidebarPanel(
       fileInput('file1', 'Оберіть ексельку із Зубочком',
@@ -8,8 +8,10 @@ shinyUI(fluidPage(
       downloadButton('downloadPlot',"Дайте мені Зубка в pdf!"),
       downloadButton('download',"Дайте мені Зубка в png!")
     ),
-    mainPanel(
-      plotOutput('plot'),
-      tableOutput('contents'))
+    mainPanel(tabsetPanel(
+      tabPanel("Карта",plotOutput('plot', width = "100%", height = "750px")),
+      tabPanel("Таблиця",tableOutput('contents'))
+    )
+      )
   )
 ))
