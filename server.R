@@ -38,18 +38,33 @@ shinyServer(function(input, output){
       
       centroids <- centroids[centroids$lab>0,]
       
-      ggplot(df, aes(map_id = X0)) +
-        scale_fill_gradient(low="white", high="#4d738a") +
-        geom_map(aes(fill = X1), map =ukraine_df, color = "grey") +
-        with(centroids, annotate(geom="text", x = long, y=lat, label = label, size = 5)) +
-        with(centroids,annotate(geom="point",x = long, y=lat+0.25,color="#31a354",fill="#31a354",size=10))+
-        with(centroids, annotate(geom="text", x = long, y=lat+0.25, label = lab, size = 6, color="white")) +
-        expand_limits(x = ukraine_df$long, y = ukraine_df$lat) + theme_void() + theme(
-          legend.position = "none"
-        )
+      if(input$typ=="Зубата!"){
+        ggplot(df, aes(map_id = X0)) +
+          scale_fill_gradient(low="white", high="#4d738a") +
+          geom_map(aes(fill = X1), map =ukraine_df, color = "grey") +
+          with(centroids, annotate(geom="text", x = long, y=lat, label = label, size = 5)) +
+          with(centroids,annotate(geom="point",x = long, y=lat+0.25,color="#31a354",fill="#31a354",size=10))+
+          with(centroids, annotate(geom="text", x = long, y=lat+0.25, label = lab, size = 6, color="white")) +
+          expand_limits(x = ukraine_df$long, y = ukraine_df$lat) + theme_void() + theme(
+            legend.position = "none"
+          )
+      } else {
+        df[[2]] <- ifelse(df$X1>0,1,0)
+        ggplot(df, aes(map_id = X0)) +
+          scale_fill_gradient(low="#deebf7", high="#9ecae1") +
+          geom_map(aes(fill = X1), map =ukraine_df, color = "white") +
+          #with(centroids, annotate(geom="text", x = long, y=lat, label = label, size = 5)) +
+          #with(centroids,annotate(geom="point",x = long, y=lat+0.25,color="#31a354",fill="#31a354",size=10))+
+          #with(centroids, annotate(geom="text", x = long, y=lat+0.25, label = lab, size = 6, color="white")) +
+          expand_limits(x = ukraine_df$long, y = ukraine_df$lat) + theme_void() + theme(
+            legend.position = "none"
+          )
+      }
+     
     }
     zubat(df)
   })
+  
   
   output$plot <- renderPlot({
    tryCatch(df())

@@ -5,6 +5,7 @@ shinyUI(fluidPage(
       fileInput('file1', 'Завантажте файл з даними',
                 accept = c(".xlsx")),
       tags$hr(),
+      radioButtons("typ","Оберіть тип карти",choices = c("Зубата!","Без пимпочек")),
       downloadButton('downloadPlot',"Завантажити мапу в pdf!"),
       downloadButton('download',"Завантажити мапу в png!")
     ),
