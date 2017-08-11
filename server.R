@@ -11,19 +11,19 @@ shinyServer(function(input, output){
     names(df)[1:2] <- c("X0","X1")
     zubat <- function(df){
       
-      ukraine_map@data$NAME_1 <- c("Черкаська","Чернігівська","Чернівецька","Крим","Дніпропетровська","Донецька","Івано-Франківська","Харківська",
-                                   "Херсонська","Хмельницька","Київ","Київська","Кіровоградська","Львівська","Луганська","Миколаївська","Одеська",
-                                   "Полтавська","Рівненська","Севастополь","Сумська","Тернопільська","Закарпатська","Вінницька","Волинська","Запорізька","Житомирська")
-      ukraine_map$VARNAME_1 <-  c("Черкаська","Чернігівська","Чернівецька","Крим","Дніпропетровська","Донецька","Івано-Франківська","Харківська",
-                                  "Херсонська","Хмельницька","Київ","Київська","Кіровоградська","Львівська","Луганська","Миколаївська","Одеська",
-                                  "Полтавська","Рівненська","Севастополь","Сумська","Тернопільська","Закарпатська","Вінницька","Волинська","Запорізька","Житомирська")
+      #ukraine_map@data$NAME_1 <- c("Крим","Житомирська","Дніпропетровська","Вінницька","Севастополь","Київ","Чернігівська","Чернівецька","Черкаська","Хмельницька","Херсонська",
+      #                             "Харківська","Сумська","Полтавська","Одеська","Миколаївська","Луганська","Кіровоградська","Київська","Запорізька","Львівська","Тернопільська",
+       #                            "Рівненська","Волинська","Донецька","Івано-Франківська","Закарпатська")
+      uk$NAME_UA <- c("Крим","Житомирська","Дніпропетровська","Вінницька","Севастополь","Київ","Чернігівська","Чернівецька","Черкаська","Хмельницька","Херсонська",
+                                 "Харківська","Сумська","Полтавська","Одеська","Миколаївська","Луганська","Кіровоградська","Київська","Запорізька","Львівська","Тернопільська",
+                                 "Рівненська","Волинська","Донецька","Івано-Франківська","Закарпатська")
       
-      ukraine_df <- fortify(ukraine_map,region = "VARNAME_1")
+      ukraine_df <- fortify(uk,region = "NAME_UA")
       
       test_df <- dplyr::data_frame(
-        X0=c("Черкаська","Чернігівська","Чернівецька","Крим","Дніпропетровська","Донецька","Івано-Франківська","Харківська",
-             "Херсонська","Хмельницька","Київ","Київська","Кіровоградська","Львівська","Луганська","Миколаївська","Одеська",
-             "Полтавська","Рівненська","Севастополь","Сумська","Тернопільська","Закарпатська","Вінницька","Волинська","Запорізька","Житомирська"),
+        X0=c("Крим","Житомирська","Дніпропетровська","Вінницька","Севастополь","Київ","Чернігівська","Чернівецька","Черкаська","Хмельницька","Херсонська",
+             "Харківська","Сумська","Полтавська","Одеська","Миколаївська","Луганська","Кіровоградська","Київська","Запорізька","Львівська","Тернопільська",
+             "Рівненська","Волинська","Донецька","Івано-Франківська","Закарпатська"),
         X1=rep(NA,27)
       )
       df <- rbind(df[1:2],test_df[1:2])
@@ -40,24 +40,35 @@ shinyServer(function(input, output){
       
       if(input$typ=="Зубата!"){
         ggplot(df, aes(map_id = X0)) +
-          scale_fill_gradient(low="white", high="#4d738a") +
-          geom_map(aes(fill = X1), map =ukraine_df, color = "grey") +
+          scale_fill_gradient(low=input$mincol, high=input$maxcol) +
+          geom_map(aes(fill = as.numeric(X1)), map =ukraine_df, color = "grey") +
           with(centroids, annotate(geom="text", x = long, y=lat, label = label, size = 5)) +
           with(centroids,annotate(geom="point",x = long, y=lat+0.25,color="#31a354",fill="#31a354",size=10))+
           with(centroids, annotate(geom="text", x = long, y=lat+0.25, label = lab, size = 6, color="white")) +
           expand_limits(x = ukraine_df$long, y = ukraine_df$lat) + theme_void() + theme(
             legend.position = "none"
           )
-      } else {
-        df[[2]] <- ifelse(df$X1>0,1,0)
-        ggplot(df, aes(map_id = X0)) +
-          scale_fill_gradient(low="#deebf7", high="#9ecae1") +
-          geom_map(aes(fill = X1), map =ukraine_df, color = "white") +
+      } else if (input$typ=="Без пимпочек"){
+        df2 <- df
+        #df2[[2]] <- ifelse(df$X1>0,1,0)
+        ggplot(df2, aes(map_id = X0)) +
+          scale_fill_gradient(low=input$mincol, high=input$maxcol) +
+          geom_map(aes(fill = as.numeric(X1)), map =ukraine_df, color = "white") +
           #with(centroids, annotate(geom="text", x = long, y=lat, label = label, size = 5)) +
           #with(centroids,annotate(geom="point",x = long, y=lat+0.25,color="#31a354",fill="#31a354",size=10))+
           #with(centroids, annotate(geom="text", x = long, y=lat+0.25, label = lab, size = 6, color="white")) +
           expand_limits(x = ukraine_df$long, y = ukraine_df$lat) + theme_void() + theme(
             legend.position = "none"
+          )
+      } else {
+        ggplot(df, aes(map_id = X0)) +
+          scale_fill_gradient(low=input$mincol, high=input$maxcol,na.value = input$nacol,guide = guide_legend(title = NULL)) +
+          geom_map(aes(fill = as.numeric(X1)), map =ukraine_df, color = NA) +
+          #with(centroids, annotate(geom="text", x = long, y=lat, label = label, size = 5)) +
+          #with(centroids,annotate(geom="point",x = long, y=lat+0.25,color="#31a354",fill="#31a354",size=10))+
+          #with(centroids, annotate(geom="text", x = long, y=lat+0.25, label = lab, size = 6, color="white")) +
+          expand_limits(x = ukraine_df$long, y = ukraine_df$lat) + theme_void() + theme(
+            legend.position = "bottom"
           )
       }
      
